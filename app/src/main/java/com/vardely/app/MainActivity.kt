@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderStatus() {
         val enabled = getSystemService<AccessibilityManager>()
-            ?.getEnabledAccessibilityServiceList(AccessibilityManager.FEEDBACK_ALL_MASK)
+            ?.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
             ?.any { info ->
                 info.resolveInfo.serviceInfo.let { serviceInfo ->
                     serviceInfo.packageName == packageName &&
