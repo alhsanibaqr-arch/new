@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderTab(tab: String) {
         selectedTab = tab
         content.removeAllViews()
-        val page = when (tab) { "apps" -> buildAppsPage(); "stats" -> buildStatsPage(); "settings" -> buildSettingsPage(); else -> buildHomePage() }
+        val page = when (tab) { "apps" -> buildAppsPage(); "stats" -> buildStatsPage(); "settings" -> buildSettingsPage(); "lock" -> buildLockPage(); else -> buildHomePage() }
         content.addView(page, FrameLayout.LayoutParams(-1, -1))
     }
 
@@ -193,7 +193,84 @@ class MainActivity : AppCompatActivity() {
         access.addView(accessBody)
         column.addView(access)
         column.addView(card().apply { addView(text(getString(R.string.about_text), 13f, muted).apply { setPadding(dp(15), dp(13), dp(15), dp(13)) }) })
+        val lockCard = card()
+        val lockRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(15), dp(14), dp(15), dp(14)); isClickable = true; setOnClickListener { renderTab("lock") } }
+        lockRow.addView(text("🔐", 22f, accent))
+        lockRow.addView(text(getString(R.string.app_lock_settings), 15f, ink, true), LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
+        lockRow.addView(text("‹", 23f, muted))
+        lockCard.addView(lockRow)
+        column.addView(lockCard)
+        val privacy = card()
+        privacy.addView(button(getString(R.string.privacy_policy), false) {
+            startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://github.com/alhsanibaqr-arch/new/blob/main/PRIVACY.md")))
+        })
+        column.addView(privacy)
         return ScrollView(this).apply { setPadding(dp(18), 0, dp(18), dp(18)); addView(column) }
+    }
+
+    private fun buildLockPage(): View {
+        val column = pageColumn()
+        column.addView(title(getString(R.string.app_lock_settings), getString(R.string.app_lock_setup_help)))
+        val pinCard = card()
+        val pinBody = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(15), dp(14), dp(15), dp(14)) }
+        pinBody.addView(text(if (store.hasPin()) getString(R.string.pin_is_set) else getString(R.string.pin_not_set), 15f, ink, true))
+        pinBody.addView(button(getString(if (store.hasPin()) R.string.change_pin else R.string.create_pin), true) { showPinSetupDialog() })
+        pinCard.addView(pinBody)
+        column.addView(pinCard)
+        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+        val found = if (Build.VERSION.SDK_INT >= 33) packageManager.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0)) else {
+            @Suppress("DEPRECATION") packageManager.queryIntentActivities(intent, 0)
+        }
+        found.asSequence().mapNotNull { r -> r.activityInfo?.applicationInfo?.let { Triple(it, r.loadLabel(packageManager).toString(), r.loadIcon(packageManager)) } }
+            .filter { it.first.packageName != packageName }
+            .distinctBy { it.first.packageName }
+            .sortedBy { it.second.lowercase() }
+            .forEach { (info, label, icon) ->
+                val c = card()
+                val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(11), dp(7), dp(11), dp(7)) }
+                row.addView(ImageView(this).apply { setImageDrawable(icon); contentDescription = label }, LinearLayout.LayoutParams(dp(42), dp(42)))
+                row.addView(text(label, 14f, ink, true), LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(11) })
+                row.addView(SwitchMaterial(this).apply {
+                    isChecked = store.lockedPackages().contains(info.packageName)
+                    isEnabled = store.hasPin()
+                    contentDescription = getString(R.string.lock_app_accessibility, label)
+                    setOnCheckedChangeListener { _, locked ->
+                        if (locked && !isAccessibilityEnabled()) {
+                            isChecked = false
+                            showAccessibilityDisclosure()
+                        } else store.setAppLocked(info.packageName, locked)
+                    }
+                })
+                c.addView(row)
+                column.addView(c)
+            }
+        return ScrollView(this).apply { setPadding(dp(18), 0, dp(18), dp(18)); addView(column) }
+    }
+
+    private fun showPinSetupDialog() {
+        val fields = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), dp(8), dp(20), 0) }
+        fun pinField(hintText: String) = EditText(this).apply {
+            hint = hintText
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            setSingleLine(true)
+        }
+        val first = pinField(getString(R.string.create_pin))
+        val confirm = pinField(getString(R.string.confirm_pin))
+        fields.addView(first)
+        fields.addView(confirm)
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.create_pin)
+            .setView(fields)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.save) { _, _ ->
+                val pin = first.text.toString()
+                if (pin.length < 4 || pin != confirm.text.toString()) {
+                    Toast.makeText(this, R.string.pin_validation_error, Toast.LENGTH_LONG).show()
+                } else {
+                    store.setPin(pin)
+                    renderTab("lock")
+                }
+            }.show()
     }
 
     private fun showAccessibilityDisclosure() {
