@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vardely</string>
-    <string name="accessibility_service_description">Monitors the active app so Vardely can block selected apps.</string>
-    <string name="app_title">Vardely</string>
-    <string name="app_subtitle">App blocking and usage tracking</string>
-    <string name="service_status">Accessibility service: %1$s</string>
-    <string name="enabled">Enabled</string>
-    <string name="disabled">Disabled</string>
-    <string name="open_accessibility_settings">Open accessibility settings</string>
-    <string name="blocked_apps">Blocked apps: %1$d</string>
-    <string name="mvp_note">MVP foundation is ready. Add apps to the block list next.</string>
+<string name="app_name">Vardely</string>
+<string name="accessibility_service_description">Checks the active app name and returns to Home when an app you selected to block opens. It does not read screen content.</string>
+<string name="nav_home">Home</string><string name="nav_apps">Apps</string><string name="nav_stats">Stats</string><string name="nav_settings">Settings</string>
+<string name="home_title">Your digital space</string><string name="home_subtitle">Choose what deserves your attention.</string>
+<string name="protection_on">Protection is on</string><string name="protection_off">Protection is off</string><string name="service_ready">App blocking service is enabled</string><string name="service_needs_setup">Enable the service to block selected apps</string>
+<string name="blocked_apps_count">Selected apps to block: %1$d</string><string name="enable_protection">Enable app blocking</string><string name="quick_actions">Quick access</string><string name="today_summary">Today</string><string name="blocked_today">Blocked attempts today: %1$d</string>
+<string name="apps_title">Choose apps</string><string name="apps_subtitle">Turn on the switch beside each app you want Vardely to block.</string><string name="search_apps">Search apps</string><string name="no_apps">No matching apps found.</string><string name="block_app_accessibility">Block %1$s</string>
+<string name="stats_title">Your progress</string><string name="stats_subtitle">Activity is counted on this device only.</string><string name="blocked_today_label">Blocked today</string><string name="blocked_week_label">Blocked in the last 7 days</string><string name="apps_protected">Apps selected for blocking</string><string name="stats_privacy_note">Vardely keeps these counts on your phone. They are not sent to a server.</string>
+<string name="settings_title">Settings</string><string name="settings_subtitle">Control how Vardely works on your phone.</string><string name="language">App language</string><string name="language_switch">العربية / English</string>
+<string name="accessibility_title">App blocking permission</string><string name="accessibility_explanation">Vardely checks the name of the app currently open so it can return to Home when that app is on your block list. It does not read screen text.</string><string name="open_accessibility_settings">Open accessibility settings</string><string name="about_text">Vardely helps you choose apps that interrupt your focus. Blocking starts only after you enable the service and turn protection on.</string>
+<string name="accessibility_disclosure_title">Allow app blocking?</string><string name="accessibility_disclosure_body">To block only the apps you choose, Vardely needs Android Accessibility access to detect which app is currently open. It checks the app name against your block list and returns to Home when there is a match. Vardely does not read screen text, capture passwords, or send this information anywhere. You can turn this access off at any time in Android Settings. Continue to Accessibility settings?</string><string name="cancel">Cancel</string><string name="continue_label">Continue</string>
 </resources>
