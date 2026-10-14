@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     private fun buildAppsPage(): View {
         val column = pageColumn()
         column.addView(title(getString(R.string.apps_title), getString(R.string.apps_subtitle)))
-        val search = EditText(this).apply { hint = getString(R.string.search_apps); textSize = 15f; singleLine = true; setPadding(dp(14), 0, dp(14), 0); background = rounded(-1, 14) }
+        val search = EditText(this).apply { hint = getString(R.string.search_apps); textSize = 15f; setSingleLine(true); setPadding(dp(14), 0, dp(14), 0); background = rounded(-1, 14) }
         column.addView(search, LinearLayout.LayoutParams(-1, dp(50)).apply { bottomMargin = dp(10) })
         appsContainer = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         column.addView(appsContainer)
