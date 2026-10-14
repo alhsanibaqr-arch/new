@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         root.addView(content, LinearLayout.LayoutParams(-1, 0, 1f))
         val nav = LinearLayout(this).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(7), dp(8), dp(10)); setBackgroundColor(-1) }
         listOf(Triple("home", "⌂", R.string.nav_home), Triple("apps", "▦", R.string.nav_apps), Triple("stats", "▤", R.string.nav_stats), Triple("settings", "⚙", R.string.nav_settings)).forEach { (tab, icon, labelId) ->
-            val item = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; setPadding(dp(5), dp(4), dp(5), dp(4)); isClickable = true; isFocusable = true; setOnClickListener { renderTab(tab) } }
+            val item = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; setPadding(dp(5), dp(4), dp(5), dp(4)); isClickable = true; isFocusable = true; tag = "nav_$tab"; setOnClickListener { renderTab(tab) } }
             item.addView(text(icon, 21f, accent).apply { gravity = Gravity.CENTER })
             item.addView(text(getString(labelId), 11f, muted).apply { gravity = Gravity.CENTER })
             nav.addView(item, LinearLayout.LayoutParams(0, -2, 1f))
