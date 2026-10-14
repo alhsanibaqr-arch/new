@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vardely</string>
+    <string name="accessibility_service_description">Monitors the active app so Vardely can block selected apps.</string>
+    <string name="app_title">Vardely</string>
+    <string name="app_subtitle">App blocking and usage tracking</string>
+    <string name="service_status">Accessibility service: %1$s</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="open_accessibility_settings">Open accessibility settings</string>
+    <string name="blocked_apps">Blocked apps: %1$d</string>
+    <string name="mvp_note">MVP foundation is ready. Add apps to the block list next.</string>
+</resources>
