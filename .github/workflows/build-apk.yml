@@ -22,8 +22,16 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.13"
+      - name: Run unit and emulator UI tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: Pixel_2
+          disable-animations: true
+          script: gradle --no-daemon testDebugUnitTest connectedDebugAndroidTest
       - name: Run Android lint and build packages
-        run: gradle --no-daemon testDebugUnitTest lintDebug assembleDebug bundleRelease
+        run: gradle --no-daemon lintDebug assembleDebug bundleRelease
       - name: Upload debug APK for device testing
         uses: actions/upload-artifact@v4
         with:
