@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
 import android.widget.Button
+import android.text.InputFilter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -25,7 +26,8 @@ class AppLockActivity : AppCompatActivity() {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
-            setPadding(32, 36, 32, 36)
+            val density = resources.displayMetrics.density
+            setPadding((32 * density).toInt(), (36 * density).toInt(), (32 * density).toInt(), (36 * density).toInt())
             setBackgroundColor(0xFFF4F8F6.toInt())
         }
         root.addView(TextView(this).apply {
@@ -46,17 +48,18 @@ class AppLockActivity : AppCompatActivity() {
             hint = getString(R.string.enter_pin)
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             setSingleLine(true)
+            filters = arrayOf(InputFilter.LengthFilter(12))
             gravity = Gravity.CENTER
         }
         root.addView(pinInput, LinearLayout.LayoutParams(-1, 56))
         root.addView(Button(this).apply {
             text = getString(R.string.unlock)
             setOnClickListener { unlock() }
-        }, LinearLayout.LayoutParams(-1, 54).apply { topMargin = 16 })
+        }, LinearLayout.LayoutParams(-1, (54 * resources.displayMetrics.density).toInt()).apply { topMargin = (16 * resources.displayMetrics.density).toInt() })
         root.addView(Button(this).apply {
             text = getString(R.string.back_home)
             setOnClickListener { goHome() }
-        }, LinearLayout.LayoutParams(-1, 50).apply { topMargin = 8 })
+        }, LinearLayout.LayoutParams(-1, (50 * resources.displayMetrics.density).toInt()).apply { topMargin = (8 * resources.displayMetrics.density).toInt() })
         setContentView(root)
     }
 
