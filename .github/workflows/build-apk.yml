@@ -22,10 +22,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.13"
-      - name: Build debug APK
-        run: gradle --no-daemon assembleDebug
-      - uses: actions/upload-artifact@v4
+      - name: Run Android lint and build packages
+        run: gradle --no-daemon lintDebug assembleDebug bundleRelease
+      - name: Upload debug APK for device testing
+        uses: actions/upload-artifact@v4
         with:
           name: vardely-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+      - name: Upload unsigned release bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: vardely-release-aab-unsigned
+          path: app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
