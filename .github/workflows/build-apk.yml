@@ -30,15 +30,7 @@ jobs:
           profile: pixel_2
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
-          script: |
-            for attempt in $(seq 1 30); do
-              if adb shell service check package | grep -q found; then
-                break
-              fi
-              sleep 5
-            done
-            adb shell service check package | grep -q found || { echo "Android package service did not become ready"; exit 1; }
-            gradle --no-daemon testDebugUnitTest connectedDebugAndroidTest
+          script: for attempt in $(seq 1 30); do adb shell service check package | grep -q found && break; sleep 5; done; adb shell service check package | grep -q found || { echo "Android package service did not become ready"; exit 1; }; gradle --no-daemon testDebugUnitTest connectedDebugAndroidTest
       - name: Run Android lint and build packages
         run: gradle --no-daemon lintDebug assembleDebug bundleRelease
       - name: Upload debug APK for device testing
