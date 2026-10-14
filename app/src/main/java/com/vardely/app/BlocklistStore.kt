@@ -24,6 +24,7 @@ class BlocklistStore(context: Context) {
     fun isBlockingEnabled() = preferences.getBoolean("blocking_enabled", false)
     fun setBlockingEnabled(enabled: Boolean) = preferences.edit().putBoolean("blocking_enabled", enabled).apply()
     fun setDisclosureAccepted(accepted: Boolean) = preferences.edit().putBoolean("accessibility_disclosure_accepted", accepted).apply()
+    fun isDisclosureAccepted() = preferences.getBoolean("accessibility_disclosure_accepted", false)
     fun hasPin() = preferences.contains("pin_hash") && preferences.contains("pin_salt")
     fun setPin(pin: String) {
         val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
