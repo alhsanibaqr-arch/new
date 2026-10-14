@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
@@ -263,24 +264,31 @@ class MainActivity : AppCompatActivity() {
             hint = hintText
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
             setSingleLine(true)
+            filters = arrayOf(InputFilter.LengthFilter(12))
         }
         val first = pinField(getString(R.string.create_pin))
         val confirm = pinField(getString(R.string.confirm_pin))
         fields.addView(first)
         fields.addView(confirm)
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.create_pin)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(if (store.hasPin()) R.string.change_pin else R.string.create_pin)
             .setView(fields)
             .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.save) { _, _ ->
+            .setPositiveButton(R.string.save, null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 val pin = first.text.toString()
                 if (pin.length < 4 || pin != confirm.text.toString()) {
                     Toast.makeText(this, R.string.pin_validation_error, Toast.LENGTH_LONG).show()
                 } else {
                     store.setPin(pin)
                     renderTab("lock")
+                    dialog.dismiss()
                 }
-            }.show()
+            }
+        }
+        dialog.show()
     }
 
     private fun showAccessibilityDisclosure() {
