@@ -90,9 +90,18 @@ class MainActivity : AppCompatActivity() {
         line.addView(state, LinearLayout.LayoutParams(0, -2, 1f))
         val toggle = SwitchMaterial(this).apply {
             isChecked = store.isBlockingEnabled()
-            setOnCheckedChangeListener { _, enabled ->
-                if (enabled && !isAccessibilityEnabled()) { isChecked = false; showAccessibilityDisclosure() }
-                else { store.setBlockingEnabled(enabled); renderTab("home") }
+            var reverting = false
+            setOnCheckedChangeListener { button, enabled ->
+                if (reverting) return@setOnCheckedChangeListener
+                if (enabled && !isAccessibilityEnabled()) {
+                    reverting = true
+                    button.isChecked = false
+                    reverting = false
+                    showAccessibilityDisclosure()
+                } else {
+                    store.setBlockingEnabled(enabled)
+                    renderTab("home")
+                }
             }
         }
         line.addView(toggle)
